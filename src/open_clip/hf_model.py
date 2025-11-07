@@ -24,6 +24,7 @@ except ImportError as e:
     class PretrainedConfig:
         pass
 
+from .base_model import BaseTextEncoder
 from .hf_configs import arch_dict
 
 
@@ -93,7 +94,7 @@ class ClsLastHiddenStatePooler(nn.Module):
         return x.last_hidden_state[:, self.cls_token_position, :]
 
 
-class HFTextEncoder(nn.Module):
+class HFTextEncoder(BaseTextEncoder):
     """HuggingFace model adapter"""
     output_tokens: torch.jit.Final[bool]
 
@@ -107,7 +108,8 @@ class HFTextEncoder(nn.Module):
             pretrained: bool = True,
             output_tokens: bool = False,
     ):
-        super().__init__()
+        # Initialize base class first - we'll set vocab_size and context_length after loading config
+        super().__init__(output_dim=output_dim, vocab_size=0, context_length=77)
         self.output_tokens = output_tokens
         self.output_dim = output_dim
 

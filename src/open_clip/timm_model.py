@@ -17,10 +17,11 @@ try:
 except ImportError:
     timm = None
 
+from .base_model import BaseVisionEncoder
 from .utils import freeze_batch_norm_2d
 
 
-class TimmModel(nn.Module):
+class TimmModel(BaseVisionEncoder):
     """ timm model adapter
     """
 
@@ -37,7 +38,7 @@ class TimmModel(nn.Module):
             patch_drop: Optional[float] = None,
             pretrained: bool = False,
     ):
-        super().__init__()
+        super().__init__(output_dim=embed_dim, image_size=image_size)
         if timm is None:
             raise RuntimeError("Please install the latest timm (`pip install timm`) to use timm based models.")
         self.image_size = to_2tuple(image_size)
